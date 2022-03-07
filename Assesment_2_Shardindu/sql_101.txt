@@ -1,0 +1,72 @@
+Use HR database for below queries
+1. WAQ to display second highest salary in HR schema.
+
+	answer: postgres=# select max(salary) 
+				 from employees 
+				 where salary < (select max(salary) from employees);
+	output:
+	   max
+	----------
+ 	17000.00
+	(1 row)
+
+2. WAQ to display name of employee who is earning maximum in his/her department.
+	answer: postgres=# select first_name 
+				 from employees e 
+				 where salary = (select max(salary) from employees where department_id = e.department_id);
+	output:
+	 first_name
+	------------
+	 Steven
+	 Alexander
+	 Nancy
+	 Den
+	 Adam
+	 John
+	 Jennifer
+	 Michael
+	 Susan
+	 Hermann
+	 Shelley
+	(11 rows)
+
+3. WAQ to display emplyees count who are working from same location.
+
+	answer: postgres=# select l.city, count(e.employee_id) 
+				 from employees e, departments d, locations l where e.department_id = d.department_id and d.location_id = l.location_id 
+				 group by city;
+	output:
+	        city         | count
+	---------------------+-------
+ 	Southlake           |     5
+ 	London              |     1
+ 	South San Francisco |    45
+ 	Toronto             |     2
+ 	Seattle             |    18
+	Oxford              |    34
+ 	Munich              |     1
+	(7 rows)
+
+4. WAQ to display number of employees joined year wise.
+	
+	answer: postgres=# select count(e.employee_id), to_char(e.hire_date,'yyyy') 
+				 from employees e 
+				 group by to_char(hire_date,'yyyy');
+	output:
+	 count | to_char
+	-------+---------
+    	10 | 1996
+     	 1 | 1990
+    	11 | 2000
+     	 7 | 1994
+     	 2 | 1987
+     	 1 | 1993
+    	28 | 1997
+     	 1 | 1991
+     	 1 | 1989
+    	23 | 1998
+  	 4 | 1995
+    	18 | 1999
+(12 rows)
+
+5. WAQ to top 2 earning employee name and salary in each department. 
